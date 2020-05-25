@@ -209,7 +209,10 @@ const Login = ({ isLoginForm }) => {
     authFormDispatch({ type: AUTH_FORM_LOGIN });
     try {
       const res = await axios.post("/api/auth/login", formData);
-      dispatch({ type: AUTH_SUCCESS, payload: res.data });
+      dispatch({
+        type: AUTH_SUCCESS,
+        payload: { ...res.data, email: formData.email },
+      });
     } catch (err) {
       const message = err.response?.data?.message || err.message;
       authFormDispatch({
@@ -223,7 +226,10 @@ const Login = ({ isLoginForm }) => {
     authFormDispatch({ type: AUTH_FORM_SIGNUP });
     try {
       const res = await axios.post("/api/auth/signup", formData);
-      dispatch({ type: AUTH_SUCCESS, payload: res.data });
+      dispatch({
+        type: AUTH_SUCCESS,
+        payload: { ...res.data, email: formData.email },
+      });
     } catch (err) {
       const message = err.response?.data?.message || err.message;
       authFormDispatch({
