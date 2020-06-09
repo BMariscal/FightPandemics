@@ -66,22 +66,22 @@ const ModalComponent = ({ setCurrentStep, onClose }) => {
     let payload = {};
     payload["title"] = formData.title;
     payload["content"] = formData.description;
-    payload["expireAt"] = formData.expires;
+    payload["expireAt"] = formData.expires.toLowerCase();
     payload["objective"] = formData.help;
     payload["types"] = formData.tags;
-    payload["visibility"] = formData.shareWith;
+    payload["visibility"] = formData.shareWith.toLowerCase();
     return payload;
   };
 
   const handleSubmit = async (e) => {
-    // This live bellow is there only to show the confirmation modal for testers
     setCurrentStep(4);
     e.preventDefault();
     populateErrors();
     const payload = cleanFormData(formData);
     if (!errors.length) {
       try {
-        console.log("THE PAYLOAD", payload);
+        // console.log("THE PAYLOAD", payload);
+        // console.log("AUTH TOKEN", axios.defaults.headers);
         const req = await axios.post("/api/posts", payload);
       } catch (error) {
         console.log(error);
@@ -100,19 +100,17 @@ const ModalComponent = ({ setCurrentStep, onClose }) => {
   };
 
   const setExpiration = (expires) => {
-    console.log(`selected ${expires}`);
     if (expires) {
-      setFormData({ expires });
+      setFormData({ ...formData, expires });
     } else {
-      setFormData({ expires: expires.default.value });
+      setFormData({ ...formData, expires: expires.default.value });
     }
   };
   const setShareWith = (shareWith) => {
-    console.log(`selected ${shareWith}`);
     if (shareWith) {
-      setFormData({ shareWith });
+      setFormData({ ...formData, shareWith });
     } else {
-      setFormData({ shareWith: shareWith.default.value });
+      setFormData({ ...formData, shareWith: shareWith.default.value });
     }
   };
 
