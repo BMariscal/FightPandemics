@@ -3,9 +3,11 @@ import Head from "./Head";
 import { SubTitle, Section, Selector } from "components/CreatePost/StyledModal";
 import SvgIcon from "components/Icon/SvgIcon";
 import downArrowSlim from "assets/icons/down-arrow-slim.svg";
+import createPostSettings from "assets/data/createPostSettings";
 
-const Third = ({ formData }) => {
-  const { shareWith, expires } = formData;
+const { shareWith, expires } = createPostSettings;
+
+const Third = ({ onShareWithChange, onExpirationChange }) => {
   return (
     <Section>
       <Head number={3} title="What is the visibility of your post?" />
@@ -13,12 +15,14 @@ const Third = ({ formData }) => {
         <SubTitle>The post will be visible to</SubTitle>
         <Selector
           suffixIcon={<SvgIcon src={downArrowSlim} />}
+          onChange={onShareWithChange}
           defaultValue={shareWith.default.value}
           filterOption={false}
           options={shareWith.options}
         />
         <Selector
           suffixIcon={<SvgIcon src={downArrowSlim} />}
+          onChange={onExpirationChange}
           defaultValue={expires.default.value}
           filterOption={false}
           options={expires.options}

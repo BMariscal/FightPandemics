@@ -5,9 +5,9 @@ import { theme } from "constants/theme";
 const { Option } = StyledSelector;
 
 const BaseSelector = (props) => {
-  const { options, key = "text", optionProps } = props;
+  const { options, key = "text", optionProps, onChange } = props;
   return (
-    <StyledSelector {...props}>
+    <StyledSelector {...props} onChange={onChange}>
       {options.map((item) => {
         return (
           <Option {...optionProps} key={item.value} value={item.value}>

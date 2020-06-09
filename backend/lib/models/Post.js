@@ -9,7 +9,7 @@ const POST_TYPES = [
   "Education",
   "Entertainment",
   "Funding",
-  "Groceries/Food",
+  "Groceries / Food",
   "Information",
   "Legal",
   "Medical Supplies",
@@ -29,7 +29,10 @@ const postSchema = new Schema(
       trim: true,
       type: String,
     },
-    expireAt: Date,
+    expireAt: {
+      enum: EXPIRATION_OPTIONS,
+      required: true,
+    },
     externalLinks: {
       appStore: { trim: true, type: String },
       email: { trim: true, type: String },
