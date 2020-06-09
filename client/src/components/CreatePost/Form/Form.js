@@ -1,11 +1,14 @@
 import React, { useState } from "react";
 import { Tabs } from "antd";
+
+import axios from "axios";
+
 import createPostSettings from "assets/data/createPostSettings";
 import { Divider, ModalWrapper } from "components/CreatePost/StyledModal";
 import OfferHelp from "components/CreatePost/Form/OfferHelp";
 import AskHelp from "components/CreatePost/Form/AskHelp";
 
-const { shareWith, expires } = createPostSettings;
+const { shareWith, expires, helpTypes } = createPostSettings;
 
 const { TabPane } = Tabs;
 
@@ -21,8 +24,9 @@ const initialState = {
     title: "",
     description: "",
     tags: [],
-    shareWith: shareWith,
-    expires: expires,
+    shareWith: shareWith.default.value,
+    expires: expires.default.value,
+    help: helpTypes.default.value,
   },
   errors: [],
 };
@@ -58,16 +62,27 @@ const ModalComponent = ({ setCurrentStep, onClose }) => {
       setErrors(newErrors);
     }
   };
+  const cleanFormData = (formData, objective) => {
+    let payload = {};
+    payload["title"] = formData.title;
+    payload["content"] = formData.description;
+    payload["expireAt"] = formData.expires;
+    payload["objective"] = formData.help;
+    payload["types"] = formData.tags;
+    payload["visibility"] = formData.shareWith;
+    return payload;
+  };
 
   const handleSubmit = async (e) => {
     // This live bellow is there only to show the confirmation modal for testers
     setCurrentStep(4);
     e.preventDefault();
     populateErrors();
+    const payload = cleanFormData(formData);
     if (!errors.length) {
-      // todo: finish integrating api
       try {
-        // const req = await axios.post("/api/posts", formData);
+        console.log("THE PAYLOAD", payload);
+        const req = await axios.post("/api/posts", payload);
       } catch (error) {
         console.log(error);
       }
@@ -81,6 +96,23 @@ const ModalComponent = ({ setCurrentStep, onClose }) => {
       setFormData({ ...formData, tags });
     } else {
       setFormData({ ...formData, tags: [...formData.tags, tag] });
+    }
+  };
+
+  const setExpiration = (expires) => {
+    console.log(`selected ${expires}`);
+    if (expires) {
+      setFormData({ expires });
+    } else {
+      setFormData({ expires: expires.default.value });
+    }
+  };
+  const setShareWith = (shareWith) => {
+    console.log(`selected ${shareWith}`);
+    if (shareWith) {
+      setFormData({ shareWith });
+    } else {
+      setFormData({ shareWith: shareWith.default.value });
     }
   };
 
@@ -109,21 +141,25 @@ const ModalComponent = ({ setCurrentStep, onClose }) => {
         <TabPane tab="Offering Help" key="1">
           <OfferHelp
             formData={formData}
-            handleSubmit={handleSubmit}
+            handleSubmit={(e) => handleSubmit(e)}
             handleFormData={handleFormData}
             renderError={renderError}
             addTag={addTag}
             selectedTags={formData.tags}
+            onExpirationChange={setExpiration}
+            onShareWithChange={setShareWith}
           />
         </TabPane>
         <TabPane tab="Requesting Help" key="2">
           <AskHelp
             formData={formData}
-            handleSubmit={handleSubmit}
+            handleSubmit={(e) => handleSubmit(e)}
             handleFormData={handleFormData}
             renderError={renderError}
             addTag={addTag}
             selectedTags={formData.tags}
+            onExpirationChange={setExpiration}
+            onShareWithChange={setShareWith}
           />
         </TabPane>
       </Tabs>

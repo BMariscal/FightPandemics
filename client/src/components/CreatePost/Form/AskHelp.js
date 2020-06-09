@@ -4,15 +4,21 @@ import First from "./FirstSection";
 import Second from "./SecondSection";
 import Third from "./ThirdSection";
 import { Footer, Submit } from "components/CreatePost/StyledModal";
+import createPostSettings from "assets/data/createPostSettings";
+
+const { helpTypes } = createPostSettings;
 
 const AskHelp = ({
   formData,
   renderError,
   addTag,
   selectedTags,
+  onShareWithChange,
+  onExpirationChange,
   handleSubmit,
   handleFormData,
 }) => {
+  formData.help = helpTypes.options[1].value;
   return (
     <>
       <First
@@ -27,12 +33,20 @@ const AskHelp = ({
         renderError={renderError}
         title="What do you need?"
       />
-      <Third formData={formData} />
+      <Third
+        formData={formData}
+        onShareWithChange={onShareWithChange}
+        onExpirationChange={onExpirationChange}
+      />
       <Footer>
         <Submit
           primary="true"
           onClick={handleSubmit}
-          disabled={!formData.title || !formData.description || selectedTags.length === 0}
+          disabled={
+            !formData.title ||
+            !formData.description ||
+            selectedTags.length === 0
+          }
         >
           Post
         </Submit>
