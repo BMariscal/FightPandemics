@@ -14,7 +14,7 @@ const POST_TYPES = [
   "Legal",
   "Medical Supplies",
   "R&D",
-  "Others",
+  "Other",
   "Wellbeing / Mental",
   "Tech",
 ];

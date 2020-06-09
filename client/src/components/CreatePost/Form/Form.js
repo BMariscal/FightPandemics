@@ -1,6 +1,6 @@
 import React, { useState } from "react";
+import { connect } from "react-redux";
 import { Tabs } from "antd";
-
 import axios from "axios";
 
 import createPostSettings from "assets/data/createPostSettings";
@@ -66,10 +66,14 @@ const ModalComponent = ({ setCurrentStep, onClose }) => {
     let payload = {};
     payload["title"] = formData.title;
     payload["content"] = formData.description;
-    payload["expireAt"] = formData.expires.toLowerCase();
+    payload["expireAt"] = formData.expires;
     payload["objective"] = formData.help;
     payload["types"] = formData.tags;
-    payload["visibility"] = formData.shareWith.toLowerCase();
+    payload["visibility"] = formData.shareWith;
+
+    payload["expireAt"] = payload["expireAt"].toLowerCase();
+    payload["visibility"] = payload["visibility"].toLowerCase();
+
     return payload;
   };
 
@@ -77,11 +81,11 @@ const ModalComponent = ({ setCurrentStep, onClose }) => {
     setCurrentStep(4);
     e.preventDefault();
     populateErrors();
+
     const payload = cleanFormData(formData);
+
     if (!errors.length) {
       try {
-        // console.log("THE PAYLOAD", payload);
-        // console.log("AUTH TOKEN", axios.defaults.headers);
         const req = await axios.post("/api/posts", payload);
       } catch (error) {
         console.log(error);
@@ -165,4 +169,10 @@ const ModalComponent = ({ setCurrentStep, onClose }) => {
   );
 };
 
-export default ModalComponent;
+const mapStateToProps = ({ session: { isAuthenticated } }) => {
+  return {
+    isAuthenticated,
+  };
+};
+
+export default connect(mapStateToProps)(ModalComponent);
