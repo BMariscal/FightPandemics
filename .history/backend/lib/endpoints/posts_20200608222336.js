@@ -185,10 +185,12 @@ async function routes(app) {
     async (req, reply) => {
       const { userId, body: postProps } = req;
       const [userErr, user] = await app.to(User.findById(userId));
+      console.log("UserID", userId, "User", user);
       if (userErr) {
         req.log.error(userErr, "Failed retrieving user");
         throw app.httpErrors.internalServerError();
       } else if (user === null) {
+        console.log("FORBIDDEN...no user?");
         throw app.httpErrors.forbidden();
       }
 

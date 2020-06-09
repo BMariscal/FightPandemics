@@ -15,7 +15,7 @@ const POST_TYPES = [
   "Medical Supplies",
   "R&D",
   "Others",
-  "Wellbeing/Mental",
+  "Wellbeing / Mental",
   "Tech",
 ];
 
@@ -31,7 +31,6 @@ const postSchema = new Schema(
     },
     expireAt: {
       enum: EXPIRATION_OPTIONS,
-      required: true,
     },
     externalLinks: {
       appStore: { trim: true, type: String },

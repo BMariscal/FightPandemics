@@ -189,6 +189,7 @@ async function routes(app) {
         req.log.error(userErr, "Failed retrieving user");
         throw app.httpErrors.internalServerError();
       } else if (user === null) {
+        console.log("FORBIDDEN...no user?");
         throw app.httpErrors.forbidden();
       }
 
