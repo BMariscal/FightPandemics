@@ -246,7 +246,7 @@ async function routes(app) {
   app.get(
     "/:postId",
     {
-      preValidation: [app.authenticate],
+      preValidation: [app.authenticateOptional], //change back?
       schema: getPostByIdSchema,
     },
     async (req) => {
@@ -259,46 +259,53 @@ async function routes(app) {
         throw app.httpErrors.notFound();
       }
 
-      // TODO: add pagination
-      const [commentErr, commentQuery] = await app.to(
-        Comment.aggregate([
-          {
-            $match: {
-              parentId: null,
-              postId: mongoose.Types.ObjectId(postId),
-            },
-          },
-          {
-            $lookup: {
-              as: "children",
-              foreignField: "parentId",
-              from: "comments",
-              localField: "_id",
-            },
-          },
-          {
-            $addFields: {
-              childCount: {
-                $size: { $ifNull: ["$children", []] },
+      const [comment] = await app.to(Comment.findOne({ postId }));
+
+      let comments = [];
+      let numComments = 0;
+
+      if (comment) {
+        // TODO: add pagination
+        const [commentQueryErr, commentQuery] = await app.to(
+          Comment.aggregate([
+            {
+              $match: {
+                parentId: null,
+                postId: mongoose.Types.ObjectId(postId),
               },
             },
-          },
-          {
-            $group: {
-              _id: null,
-              comments: { $push: "$$ROOT" },
-              numComments: { $sum: { $add: ["$childCount", 1] } },
+            {
+              $lookup: {
+                as: "children",
+                foreignField: "parentId",
+                from: "comments",
+                localField: "_id",
+              },
             },
-          },
-        ]),
-      );
-      if (commentErr) {
-        req.log.error(commentErr, "Failed retrieving comments");
-        throw app.httpErrors.internalServerError();
+            {
+              $addFields: {
+                childCount: {
+                  $size: { $ifNull: ["$children", []] },
+                },
+              },
+            },
+            {
+              $group: {
+                _id: null,
+                comments: { $push: "$$ROOT" },
+                numComments: { $sum: { $add: ["$childCount", 1] } },
+              },
+            },
+          ]),
+        );
+        if (commentQueryErr) {
+          req.log.error(commentErr, "Failed retrieving comments");
+          throw app.httpErrors.internalServerError();
+        } else if (commentQuery) {
+          comments = commentQuery[0].comments;
+          numComments = commentQuery[0].comments;
+        }
       }
-
-      const { comments = [], numComments = 0 } = commentQuery[0];
-
       return {
         comments,
         numComments,

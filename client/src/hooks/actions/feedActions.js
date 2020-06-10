@@ -5,6 +5,7 @@ export const TOGGLE_STATE = "TOGGLE_STATE";
 export const SET_VALUE = "SET_VALUE";
 export const SET_LOADING = "SET_LOADING";
 export const SET_POSTS = "SET_POSTS";
+export const SET_CONTENT = "SET_CONTENT";
 export const FETCH_POSTS = "FETCH_POSTS";
 export const ERROR_POSTS = "ERROR_POSTS";
 export const NEXT_PAGE = "NEXT_PAGE";

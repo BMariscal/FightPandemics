@@ -35,6 +35,7 @@ import {
   TOGGLE_STATE,
   SET_VALUE,
   SET_POSTS,
+  SET_CONTENT,
   FETCH_POSTS,
   ERROR_POSTS,
   NEXT_PAGE,
@@ -322,6 +323,14 @@ const Feed = (props) => {
     });
   };
 
+  const loadFullPostContent = ({ postId, content }) => {
+    postsDispatch({
+      type: SET_CONTENT,
+      postId,
+      content,
+    });
+  };
+
   const loadPosts = useCallback(async () => {
     const { user } = props;
     const limit = 5;
@@ -399,6 +408,7 @@ const Feed = (props) => {
         showFilters,
         handlePostLike,
         updateComments,
+        loadFullPostContent,
       }}
     >
       <FeedWrapper>
@@ -442,6 +452,7 @@ const Feed = (props) => {
               filteredPosts={postsList}
               updateComments={updateComments}
               handlePostLike={handlePostLike}
+              loadFullPostContent={loadFullPostContent}
             />
             {isLoading && <div>Loading...</div>}
             {status === ERROR_POSTS && <div>Something went wrong...</div>}

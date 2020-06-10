@@ -18,9 +18,17 @@ import SvgIcon from "../Icon/SvgIcon";
 import statusIndicator from "assets/icons/status-indicator.svg";
 import { ReactComponent as SubMenuIcon } from "assets/icons/submenu.svg";
 
-const Post = ({ handlePostLike, isAuthenticated, post, updateComments }) => {
+const Post = ({
+  handlePostLike,
+  isAuthenticated,
+  post,
+  updateComments,
+  loadFullPostContent,
+}) => {
   const [showComments, setShowComments] = useState(false);
+  const [loadContent, setLoadContent] = useState(true);
   const [copied, setCopied] = useState(false);
+  const [content, setContent] = useState("");
   const AvatarName =
     (post.author.name &&
       post.author.name.match(/\b\w/g).join("").toUpperCase()) ||
@@ -55,6 +63,35 @@ const Post = ({ handlePostLike, isAuthenticated, post, updateComments }) => {
       });
       setComment("");
     }
+  };
+
+  const loadPostContent = async (e) => {
+    e.preventDefault();
+    let response = {};
+    const postId = post._id;
+    const endPoint = `/api/posts/${postId}`;
+
+    if (!loadContent) {
+      await loadFullPostContent({
+        postId,
+        content,
+      });
+    } else {
+      try {
+        setContent(post.content);
+        response = await axios.get(endPoint);
+      } catch (error) {
+        console.log({ error });
+      }
+      if (response.data) {
+        const content = response.data.post.content;
+        await loadFullPostContent({
+          postId,
+          content,
+        });
+      }
+    }
+    setLoadContent(!loadContent);
   };
 
   const loadComments = useCallback(async () => {
@@ -125,7 +162,13 @@ const Post = ({ handlePostLike, isAuthenticated, post, updateComments }) => {
 
   const renderViewMore = (
     <Card.Body className="view-more-wrapper">
-      <span className="view-more">View More</span>
+      <a onClick={loadPostContent}>
+        {loadContent ? (
+          <span className="view-more">View More</span>
+        ) : (
+          <span className="view-more">View Less</span>
+        )}
+      </a>
     </Card.Body>
   );
 

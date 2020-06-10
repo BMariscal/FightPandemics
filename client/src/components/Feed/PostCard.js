@@ -93,6 +93,7 @@ const PostCard = styled(Card)`
       border-top: unset;
       padding: 0;
       color: black;
+      white-space: pre-line;
 
       &::before {
         content: none;

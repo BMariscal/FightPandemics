@@ -5,6 +5,7 @@ import {
   TOGGLE_STATE,
   SET_VALUE,
   SET_POSTS,
+  SET_CONTENT,
   FETCH_POSTS,
   ERROR_POSTS,
   NEXT_PAGE,
@@ -55,13 +56,30 @@ export const postsReducer = (state = postsState, action) => {
     case FETCH_POSTS:
       return { ...state, status: FETCH_POSTS, isLoading: true };
     case SET_POSTS:
-      return { ...state, status: SET_POSTS, posts: action.posts, isLoading: false };
+      return {
+        ...state,
+        status: SET_POSTS,
+        posts: action.posts,
+        isLoading: false,
+      };
     case ERROR_POSTS:
       return { ...state, status: ERROR_POSTS, posts: [], isLoading: false };
     case NEXT_PAGE:
       return { ...state, page: state.page + 1 };
     case SET_LOADING:
       return { ...state, isLoading: false, loadMore: false };
+    case SET_CONTENT:
+      return {
+        ...state,
+        posts: {
+          ...state.posts,
+          [action.postId]: {
+            ...state.posts[action.postId],
+            content: action.content,
+          },
+        },
+      };
+
     case SET_LIKE:
       return {
         ...state,
@@ -74,18 +92,18 @@ export const postsReducer = (state = postsState, action) => {
           },
         },
       };
-      case SET_COMMENTS:
-        return {
-          ...state,
-          posts: {
-            ...state.posts,
-            [action.postId]: {
-              ...state.posts[action.postId],
-              comments: action.comments,
-              commentsCount: action.commentsCount,
-            },
+    case SET_COMMENTS:
+      return {
+        ...state,
+        posts: {
+          ...state.posts,
+          [action.postId]: {
+            ...state.posts[action.postId],
+            comments: action.comments,
+            commentsCount: action.commentsCount,
           },
-        };
+        },
+      };
     default:
       return state;
   }
