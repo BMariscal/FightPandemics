@@ -45,7 +45,7 @@ const PostCard = styled(Card)`
       justify-content: space-between;
 
       .card-submenu {
-        display: none;
+        display: flex;
 
         @media screen and (min-width: ${mq.tablet.narrow.minWidth}) {
           display: block;

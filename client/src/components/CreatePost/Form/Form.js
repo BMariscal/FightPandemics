@@ -85,7 +85,7 @@ const ModalComponent = ({ setCurrentStep, onClose }) => {
     const payload = cleanFormData(formData);
     if (!errors.length) {
       try {
-        const req = await axios.post("/api/posts", payload);
+        await axios.post("/api/posts", payload);
       } catch (error) {
         console.log(error);
       }
