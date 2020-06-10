@@ -12,11 +12,11 @@ import FilterTag from "components/Tag/FilterTag";
 import AutoSize from "components/Input/AutoSize";
 import Heading from "components/Typography/Heading";
 import TextAvatar from "components/TextAvatar";
+import SubMenuButton from "components/Button/SubMenuButton";
 
 // Icons
 import SvgIcon from "../Icon/SvgIcon";
 import statusIndicator from "assets/icons/status-indicator.svg";
-import { ReactComponent as SubMenuIcon } from "assets/icons/submenu.svg";
 
 const Post = ({
   handlePostLike,
@@ -120,6 +120,19 @@ const Post = ({
   useEffect(() => {
     loadComments();
   }, [showComments]); // eslint-disable-line react-hooks/exhaustive-deps
+
+  const handlePostDelete = async (e) => {
+    e.preventDefault();
+    if (isAuthenticated) {
+      const postId = post._id;
+      const endPoint = `/api/posts/${postId}`;
+      try {
+        await axios.delete(endPoint);
+      } catch (error) {
+        console.log({ error });
+      }
+    }
+  };
 
   const renderHeader = (
     <Card.Header
@@ -231,7 +244,7 @@ const Post = ({
       <div className="card-header">
         {renderHeader}
         <div className="card-submenu">
-          <SubMenuIcon />
+          <SubMenuButton deletePost={handlePostDelete} />
         </div>
       </div>
       <WhiteSpace size="md" />
