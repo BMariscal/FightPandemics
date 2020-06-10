@@ -206,6 +206,7 @@ async function routes(app) {
         req.log.error(userErr, "Failed retrieving user");
         throw app.httpErrors.internalServerError();
       } else if (user === null) {
+        req.log.error(userErr, "User does not exist");
         throw app.httpErrors.forbidden();
       }
 

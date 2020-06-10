@@ -29,9 +29,7 @@ const postSchema = new Schema(
       trim: true,
       type: String,
     },
-    expireAt: {
-      enum: EXPIRATION_OPTIONS,
-    },
+    expireAt: Date,
     externalLinks: {
       appStore: { trim: true, type: String },
       email: { trim: true, type: String },

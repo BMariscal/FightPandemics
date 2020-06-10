@@ -62,7 +62,7 @@ const ModalComponent = ({ setCurrentStep, onClose }) => {
       setErrors(newErrors);
     }
   };
-  const cleanFormData = (formData, objective) => {
+  const cleanFormData = (formData) => {
     let payload = {};
     payload["title"] = formData.title;
     payload["content"] = formData.description;
@@ -83,7 +83,6 @@ const ModalComponent = ({ setCurrentStep, onClose }) => {
     populateErrors();
 
     const payload = cleanFormData(formData);
-
     if (!errors.length) {
       try {
         const req = await axios.post("/api/posts", payload);
@@ -143,7 +142,7 @@ const ModalComponent = ({ setCurrentStep, onClose }) => {
         <TabPane tab="Offering Help" key="1">
           <OfferHelp
             formData={formData}
-            handleSubmit={(e) => handleSubmit(e)}
+            handleSubmit={handleSubmit}
             handleFormData={handleFormData}
             renderError={renderError}
             addTag={addTag}
@@ -155,7 +154,7 @@ const ModalComponent = ({ setCurrentStep, onClose }) => {
         <TabPane tab="Requesting Help" key="2">
           <AskHelp
             formData={formData}
-            handleSubmit={(e) => handleSubmit(e)}
+            handleSubmit={handleSubmit}
             handleFormData={handleFormData}
             renderError={renderError}
             addTag={addTag}
