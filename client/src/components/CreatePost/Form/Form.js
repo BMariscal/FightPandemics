@@ -66,13 +66,10 @@ const ModalComponent = ({ setCurrentStep, onClose }) => {
     let payload = {};
     payload["title"] = formData.title;
     payload["content"] = formData.description;
-    payload["expireAt"] = formData.expires;
+    payload["expireAt"] = formData.expires.toLowerCase();
     payload["objective"] = formData.help;
     payload["types"] = formData.tags;
-    payload["visibility"] = formData.shareWith;
-
-    payload["expireAt"] = payload["expireAt"].toLowerCase();
-    payload["visibility"] = payload["visibility"].toLowerCase();
+    payload["visibility"] = formData.shareWith.toLowerCase();
 
     return payload;
   };
